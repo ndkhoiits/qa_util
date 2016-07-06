@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by khoi.nguyen on 7/6/2016.
  */
-public class ExcelDeserializor<T extends ModelObject> {
+public class ExcelDeserializer<T extends ModelObject> {
 	public List<T> convert(String filePath, Class<T> clazz) {
 		HashMap<String, String> rowData;
 		ArrayList<T> result = new ArrayList<T>();
