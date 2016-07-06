@@ -10,6 +10,10 @@ import java.util.List;
  */
 public class Example {
 	public static void main(String[] args) {
-		List object = new ExcelDeserializor().convert("D:\\test.xlsx", ExampleModel.class);
+		List<ExampleModel> listObj = new ExcelDeserializor().convert("D:\\test.xlsx", ExampleModel.class);
+
+		for (ExampleModel model : listObj) {
+			System.out.println(model.getEmail());
+		}
 	}
 }

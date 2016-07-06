@@ -1,13 +1,13 @@
 package se.niteco.qa.utils;
 
-import com.google.gson.Gson;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import se.niteco.qa.model.ModelObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +19,6 @@ import java.util.List;
 public class ExcelDeserializor<T extends ModelObject> {
 	public List<T> convert(String filePath, Class<T> clazz) {
 		HashMap<String, String> rowData;
-		Gson gson = new Gson();
 		ArrayList<T> result = new ArrayList<T>();
 		List<String> headers = new ArrayList<String>();
 		try {
@@ -38,14 +37,14 @@ public class ExcelDeserializor<T extends ModelObject> {
 					rowData.put(headers.get(cell.getColumnIndex()), getStringValue(cell));
 				}
 
-				String g = gson.toJson(rowData);
-				T rowObj = gson.fromJson(g, clazz);
+				T rowObj = ConstructorUtils.invokeConstructor(clazz, null);
+				BeanUtils.populate(rowObj, rowData);
 				result.add(rowObj);
 			}
 
 			return result;
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -53,6 +52,7 @@ public class ExcelDeserializor<T extends ModelObject> {
 
 	private static String getStringValue(Cell cell) {
 		int type = cell.getCellType();
+		// TODO Add more type here
 		switch (type) {
 			case Cell.CELL_TYPE_STRING:
 				return cell.getStringCellValue();
